@@ -1,6 +1,7 @@
 package com.home.address.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,6 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    @Value("${microservices.profile.username}")
+    String username;
+
+    @Value("${microservices.profile.password}")
+    String password;
+
     @Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -20,8 +27,8 @@ public class SecurityConfig {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication()
-                .withUser("user1")
-                .password(passwordEncoder().encode("user1Pass"))
+                .withUser(username)
+                .password(passwordEncoder().encode(password))
                 .authorities("ROLE_USER");
     }
 
